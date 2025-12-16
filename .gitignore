@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Modelos entrenados
+modelos/*.h5
+modelos/*.pb
+modelos/*.savedmodel
+modelos/modelo_porciones/
+
+# Datos preprocesados
+datos_preprocesados/*.npy
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*.ipynb
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentación generada (imágenes)
+documentacion/*.png
+documentacion/*.jpg
+
+# Logs
+*.log
+
+# Variables de entorno
+.env
+.env.local
+
+# Node modules (si se añade frontend build)
+node_modules/
+
