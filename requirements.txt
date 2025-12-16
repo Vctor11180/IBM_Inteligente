@@ -24,4 +24,5 @@ ipfshttpclient>=0.7.0  # 0.8.0 no está disponible aún, usar 0.7.0
 
 # Utilidades
 python-dotenv>=0.20.0
+requests>=2.28.0  # Para testing de endpoints
 

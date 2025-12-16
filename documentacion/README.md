@@ -2,7 +2,7 @@
 
 Bienvenido a la documentación del proyecto NutriLife. Aquí encontrarás toda la información necesaria para entender y desarrollar la aplicación.
 
-## 📖 Documentos Disponibles
+## 📖 Documentos Generales
 
 ### 1. **DOCUMENTACION_APLICACION.md**
 Documentación completa de la aplicación. Incluye:
@@ -17,160 +17,116 @@ Documentación completa de la aplicación. Incluye:
 
 👉 **Lee este documento primero** para tener una visión completa del proyecto.
 
+### 2. **ESTADO_ACTUAL.md**
+Estado actual del proyecto y próximos pasos.
+
 ---
 
-### 2. **FASE1_ENTRENAMIENTO.md**
-Documentación específica de la Fase 1: Entrenamiento del Modelo IA.
-- Objetivos de la fase
-- Checklist de tareas
-- Descripción de datos disponibles
-- Arquitectura del modelo
-- Flujo de trabajo
-- Métricas esperadas
+## 📁 Documentación por Fases
+
+### Fase 1: Entrenamiento y Validación del Modelo IA ✅
+
+Ubicación: `documentacion/fase1/`
+
+- **FASE1_ENTRENAMIENTO.md**: Guía detallada de la Fase 1
+- **RESUMEN_FASE1.md**: Resumen de resultados y completitud
+- Visualizaciones generadas (gráficos, muestras, matriz de confusión)
+
+**Estado**: ✅ Completada
+
+---
+
+### Fase 2: Backend API para IA 🚧
+
+Ubicación: `documentacion/fase2/`
+
+- **FASE2_BACKEND_API.md**: Guía detallada de la Fase 2
+
+**Estado**: 🚧 En progreso
+
+---
+
+### Fase 3: Integración Frontend-Backend ⏳
+
+Ubicación: `documentacion/fase3/`
+
+**Estado**: ⏳ Pendiente
+
+---
+
+### Fase 4: Integración Web3 - IPFS ⏳
+
+Ubicación: `documentacion/fase4/`
+
+**Estado**: ⏳ Pendiente
+
+---
+
+### Fase 5: Integración Web3 - Blockchain ⏳
+
+Ubicación: `documentacion/fase5/`
+
+**Estado**: ⏳ Pendiente
+
+---
+
+### Fase 6: Funcionalidades Avanzadas ⏳
+
+Ubicación: `documentacion/fase6/`
+
+**Estado**: ⏳ Pendiente
 
 ---
 
 ## 🚀 Inicio Rápido
 
-### Fase 1: Entrenamiento del Modelo (Actual)
+### Para Desarrolladores
 
-1. **Instalar dependencias:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+1. **Leer documentación general**: `DOCUMENTACION_APLICACION.md`
+2. **Revisar fase actual**: Ver carpeta correspondiente
+3. **Seguir checklist**: Cada fase tiene su checklist de tareas
 
-2. **Preprocesar imágenes:**
-   ```bash
-   python scripts/preprocesamiento.py
-   ```
-
-3. **Entrenar modelo:**
-   ```bash
-   python scripts/entrenar_modelo.py
-   ```
-
-4. **Probar predicciones:**
-   ```bash
-   python scripts/predecir.py ruta/a/imagen.jpg
-   ```
-
----
-
-## 📂 Estructura del Proyecto
+### Estructura del Proyecto
 
 ```
 proyecto/
 ├── documentacion/          # Esta carpeta
-│   ├── DOCUMENTACION_APLICACION.md
-│   ├── FASE1_ENTRENAMIENTO.md
-│   └── README.md
-├── scripts/                # Scripts de entrenamiento
-│   ├── preprocesamiento.py
-│   ├── entrenar_modelo.py
-│   ├── predecir.py
-│   └── README.md
+│   ├── DOCUMENTACION_APLICACION.md (general)
+│   ├── ESTADO_ACTUAL.md (general)
+│   ├── README.md (este archivo)
+│   ├── fase1/             # Documentación Fase 1
+│   ├── fase2/             # Documentación Fase 2
+│   ├── fase3/             # Documentación Fase 3
+│   ├── fase4/             # Documentación Fase 4
+│   ├── fase5/             # Documentación Fase 5
+│   └── fase6/             # Documentación Fase 6
+├── scripts/                # Scripts de entrenamiento (Fase 1)
+├── backend/                # API Backend (Fase 2)
+├── frontend/               # Aplicación web (Fase 3)
 ├── entrenamiento/          # Datos de entrenamiento
-│   ├── Porcion_correcta/
-│   └── Exceso_porcion/
-├── validacion/            # Datos de validación
-│   ├── Porcioncorrecta/
-│   └── Porcionexceso/
-├── modelos/               # Modelos entrenados (generados)
-├── datos_preprocesados/   # Datos preprocesados (generados)
-├── index.html             # Frontend
-├── styles.css             # Estilos
-└── requirements.txt       # Dependencias
+├── validacion/             # Datos de validación
+└── modelos/                # Modelos entrenados
 ```
 
 ---
 
-## 📈 Estado del Proyecto
+## 📈 Estado General del Proyecto
 
-### Fase 1: Entrenamiento y Validación del Modelo IA ✅ (En Progreso)
-- [x] Recopilación de datos de entrenamiento
-- [x] Organización de carpetas
-- [x] Documentación
-- [x] Scripts de preprocesamiento
-- [x] Scripts de entrenamiento
-- [ ] Ejecutar entrenamiento
-- [ ] Validar modelo
-- [ ] Exportar modelo
-
-### Fase 2: Backend API para IA 🚧 (Pendiente)
-- [ ] Endpoint para análisis de imágenes
-- [ ] Integración del modelo
-- [ ] Cálculo de calorías
-- [ ] Recomendaciones según IMC
-
-### Fase 3: Integración Frontend-Backend 🚧 (Pendiente)
-- [ ] Componente de subida de imágenes
-- [ ] Visualización de resultados
-- [ ] Conexión con API
-
-### Fase 4: Integración Web3 - IPFS 🚧 (Pendiente)
-- [ ] Configuración IPFS
-- [ ] Subida de imágenes
-- [ ] Almacenamiento de hashes
-
-### Fase 5: Integración Web3 - Blockchain 🚧 (Pendiente)
-- [ ] Smart Contract
-- [ ] Tests del contrato
-- [ ] Deployment
-- [ ] Integración frontend
-
-### Fase 6: Funcionalidades Avanzadas 🚧 (Pendiente)
-- [ ] Historial de análisis
-- [ ] Dashboard de progreso
-- [ ] Sistema de recompensas
+- ✅ **Fase 1**: Completada - Modelo IA entrenado
+- 🚧 **Fase 2**: En progreso - Backend API
+- ⏳ **Fase 3**: Pendiente - Integración Frontend
+- ⏳ **Fase 4**: Pendiente - IPFS
+- ⏳ **Fase 5**: Pendiente - Blockchain
+- ⏳ **Fase 6**: Pendiente - Funcionalidades avanzadas
 
 ---
 
-## 🛠️ Stack Tecnológico
+## 📝 Notas
 
-### IA/ML
-- TensorFlow/Keras
-- OpenCV, PIL
-- NumPy, Pandas
-- Albumentations
-
-### Frontend
-- HTML5, CSS3, JavaScript
-
-### Backend (Fases posteriores)
-- Python/Flask
-- Web3.py
-
-### Web3 (Fases posteriores)
-- IPFS
-- Ethereum/Polygon
-- Solidity
-- MetaMask
-
----
-
-## 📝 Notas Importantes
-
-1. **Dataset Pequeño**: Actualmente tenemos 17 imágenes de entrenamiento y 9 de validación. Esto es suficiente para un prototipo, pero para producción se necesitarían más datos.
-
-2. **Transfer Learning**: Usamos MobileNetV2 con transfer learning para aprovechar al máximo el dataset pequeño.
-
-3. **Data Augmentation**: Esencial para mejorar el rendimiento con pocos datos.
-
-4. **Web3**: La integración Web3 será implementada en fases posteriores (4 y 5).
-
----
-
-## 🤝 Contribuciones
-
-Este proyecto está en desarrollo activo. Consulta los documentos específicos de cada fase para más detalles.
-
----
-
-## 📧 Contacto y Soporte
-
-Para preguntas o sugerencias sobre el proyecto, consulta la documentación específica de cada fase o revisa los scripts comentados en el código.
+- Cada fase tiene su propia carpeta con documentación específica
+- La documentación general se mantiene en el nivel raíz de `documentacion/`
+- Los checklists de cada fase se actualizan conforme se avanza
 
 ---
 
 **Última actualización**: Ver fecha en cada documento individual.
-

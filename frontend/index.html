@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>NutriLife</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="brand">
+        <div class="logo">🍃</div>
+        <span>NutriLife</span>
+    </div>
+
+    <nav>
+        <button class="nav-btn active" onclick="mostrarVista('imc')">Calculadora IMC</button>
+        <button class="nav-btn" onclick="mostrarVista('reco')">Recomendaciones</button>
+        <button class="nav-btn" onclick="mostrarVista('analizar')">📷 Analizar Comida</button>
+        <button class="nav-btn" onclick="mostrarVista('bot')">NutriBot</button>
+    </nav>
+</header>
+
+<main>
+
+<section id="vista-imc">
+
+    <section class="card">
+        <div class="card-header">
+            <div class="icon">🧮</div>
+            <h2>Calculadora de IMC</h2>
+            <p>
+                Ingresa tus datos para calcular tu Índice de Masa Corporal
+                y recibir recomendaciones personalizadas
+            </p>
+        </div>
+
+        <div class="field">
+            <label>Edad <span id="edadVal">21</span> años</label>
+            <input type="range" min="10" max="80" value="21"
+                   oninput="edadVal.innerText=this.value">
+        </div>
+
+        <div class="field">
+            <label>Peso <span id="pesoVal">67.1</span> kg</label>
+            <input type="range" min="30" max="120" step="0.1" value="67.1"
+                   oninput="pesoVal.innerText=this.value">
+        </div>
+
+        <div class="field">
+            <label>Altura <span id="alturaVal">1.67</span> m</label>
+            <input type="range" min="1.40" max="2.10" step="0.01" value="1.67"
+                   oninput="alturaVal.innerText=this.value">
+        </div>
+
+        <div class="activity">
+            <label>Nivel de Actividad Física</label>
+            <div class="activity-group">
+                <button class="activity-btn active">Sedentario</button>
+                <button class="activity-btn">Ligera</button>
+                <button class="activity-btn">Moderada</button>
+                <button class="activity-btn">Alta</button>
+            </div>
+        </div>
+
+        <button class="primary-btn" onclick="calcularIMCColab()">
+    Calcular mi IMC
+</button>
+
+
+    </section>
+
+</section>
+
+<section id="vista-reco" class="hidden">
+
+    <div class="reco-header">
+        <div class="reco-icon">🍴</div>
+        <h2>Recomendaciones Personalizadas</h2>
+        <p>Plan nutricional adaptado a tu IMC, altura y nivel de actividad física</p>
+    </div>
+
+    <div class="reco-main">
+        <div class="goal">
+            <small>Tu Objetivo</small>
+            <h3 id="objetivoReco">Mantener peso saludable y equilibrio nutricional</h3>
+        </div>
+
+        <div class="calories-box">
+            <small>Calorías Diarias Sugeridas</small>
+            <strong id="caloriasReco">1932 kcal</strong>
+        </div>
+    </div>
+
+    <div class="meals">
+        <div class="meal-card">
+            <div class="meal-title">☀️ Desayuno</div>
+            <small id="horaDesayuno">7:00 - 9:00 AM</small>
+            <p id="descDesayuno">Yogurt natural con frutas frescas y granola</p>
+            <div class="meal-info">
+                <span class="cal" id="calDes">350 Cal</span>
+                <span class="prot" id="protDes">18g Prot</span>
+            </div>
+        </div>
+
+        <div class="meal-card">
+            <div class="meal-title">🍽️ Almuerzo</div>
+            <small id="horaAlm">12:00 - 2:00 PM</small>
+            <p id="descAlm">Pechuga de pollo a la plancha, ensalada y arroz</p>
+            <div class="meal-info">
+                <span class="cal" id="calAlm">500 Cal</span>
+                <span class="prot" id="protAlm">35g Prot</span>
+            </div>
+        </div>
+
+        <div class="meal-card">
+            <div class="meal-title">🌙 Cena</div>
+            <small id="horaCena">7:00 - 9:00 PM</small>
+            <p id="descCena">Pescado al vapor con verduras asadas</p>
+            <div class="meal-info">
+                <span class="cal" id="calCena">400 Cal</span>
+                <span class="prot" id="protCena">30g Prot</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="snacks">
+        <h4>🍏 Snacks Saludables</h4>
+        <div class="snack-list" id="snacksReco">
+            <span>Frutas frescas variadas</span>
+            <span>Almendras (30g)</span>
+            <span>Zanahoria con hummus</span>
+        </div>
+    </div>
+
+    <div class="tips">
+        <h4>💡 Consejos Importantes</h4>
+        <ul id="tipsReco">
+            <li>💧 Bebe al menos 2 litros de agua</li>
+            <li>🏃 Realiza actividad física regular</li>
+            <li>😴 Duerme entre 7-8 horas</li>
+            <li>📒 Lleva un registro alimenticio</li>
+        </ul>
+    </div>
+
+</section>
+
+<!-- nutribot -->
+<section id="vista-bot" class="hidden">
+
+    <div class="bot-header">
+        <div class="bot-icon">💬</div>
+        <h2>NutriBot</h2>
+        <p>
+            Tu asistente inteligente de nutrición. Pregúntame lo que necesites
+            o envía una imagen de alimentos.
+        </p>
+    </div>
+
+    <!-- chat -->
+    <div class="chat-box">
+
+        <div class="message bot">
+            ¡Hola! Soy NutriBot, tu asistente de nutrición.
+            Puedo ayudarte con consejos nutricionales y analizar imágenes de alimentos.
+            ¿En qué puedo ayudarte hoy?
+        </div>
+
+        <!-- MENSAJES DE COLAB SE INSERTAN AQUÍ -->
+        <div id="chat-messages"></div>
+
+    </div>
+
+    <!-- INPUT -->
+    <div class="chat-input">
+        <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="analizarImagenDesdeChat(event)">
+        <button class="img-btn" onclick="document.getElementById('imageInput').click()" title="Subir imagen">📷</button>
+        <input type="text" id="userMessage" placeholder="Escribe tu consulta de nutrición..." onkeypress="if(event.key === 'Enter') enviarMensaje()">
+        <button class="send-btn" onclick="enviarMensaje()" title="Enviar mensaje">➤</button>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq">
+        <h4>Preguntas Frecuentes</h4>
+        <div class="faq-list">
+            <button onclick="hacerPregunta('¿Cuánta proteína necesito?')">¿Cuánta proteína necesito?</button>
+            <button onclick="hacerPregunta('Tips para adelgazar')">Tips para adelgazar</button>
+            <button onclick="hacerPregunta('Mejores snacks saludables')">Mejores snacks saludables</button>
+            <button onclick="hacerPregunta('Hidratación recomendada')">Hidratación recomendada</button>
+            <button onclick="hacerPregunta('Nutrición pre-entreno')">Nutrición pre-entreno</button>
+            <button onclick="hacerPregunta('Desayunos saludables')">Desayunos saludables</button>
+        </div>
+    </div>
+
+</section>
+
+<!-- Vista Analizar Comida -->
+<section id="vista-analizar" class="hidden">
+
+    <div class="bot-header">
+        <div class="bot-icon">📷</div>
+        <h2>Analizar Comida</h2>
+        <p>Sube una imagen de tu comida para recibir análisis nutricional personalizado</p>
+    </div>
+
+    <!-- Área de subida -->
+    <div class="upload-area" id="uploadArea" 
+         ondrop="handleDrop(event)" 
+         ondragover="handleDragOver(event)" 
+         ondragleave="handleDragLeave(event)">
+        <input type="file" id="fileInput" accept="image/*" onchange="previewImagen(event)" style="display:none">
+        <div class="upload-content" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📷</div>
+            <p>Haz clic o arrastra una imagen aquí</p>
+            <small>Formatos: JPG, PNG, JPEG (máx. 10MB)</small>
+        </div>
+    </div>
+
+    <!-- Vista previa de imagen -->
+    <div class="image-preview hidden" id="imagePreview">
+        <img id="previewImg" src="" alt="Vista previa">
+        <button class="remove-img-btn" onclick="removerImagen()">✕</button>
+        <div class="preview-actions">
+            <button class="primary-btn" onclick="analizarImagen()" id="btnAnalizar">
+                🔍 Analizar Comida
+            </button>
+        </div>
+    </div>
+
+    <!-- Estado de carga -->
+    <div class="loading-state hidden" id="loadingState">
+        <div class="spinner"></div>
+        <p>Analizando imagen con IA...</p>
+    </div>
+
+    <!-- Resultados del análisis -->
+    <div class="analysis-results hidden" id="analysisResults">
+        <div class="result-card-main">
+            <div class="result-status" id="resultStatus">
+                <div class="status-icon" id="statusIcon">✅</div>
+                <h3 id="resultTitle">Porción Correcta</h3>
+                <p class="confidence" id="confidenceText">Confianza: 85%</p>
+            </div>
+
+            <div class="result-details">
+                <div class="detail-item">
+                    <span class="detail-label">Calorías Estimadas</span>
+                    <span class="detail-value" id="caloriasEst">450 kcal</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Peso Estimado</span>
+                    <span class="detail-value" id="pesoEst">350 g</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="recommendation-box" id="recommendationBox">
+            <h4>💡 Recomendación Personalizada</h4>
+            <p id="recommendationText">Porción adecuada para tu objetivo calórico.</p>
+        </div>
+
+        <button class="secondary-btn" onclick="analizarOtra()">
+            📷 Analizar otra imagen
+        </button>
+    </div>
+
+</section>
+
+</main>
+
+<script>
+const API_URL = "http://localhost:5000/api"; 
+let imagenActual = null;
+let datosUsuarioIMC = null;
+
+// Guardar datos del usuario cuando calcula IMC
+function guardarDatosUsuario(resultado) {
+    datosUsuarioIMC = {
+        imc: resultado.imc,
+        categoria: resultado.categoria,
+        calorias: resultado.calorias,
+        objetivo: resultado.objetivo
+    };
+    localStorage.setItem('datosUsuarioIMC', JSON.stringify(datosUsuarioIMC));
+}
+
+// Cargar datos guardados al iniciar
+window.addEventListener('DOMContentLoaded', () => {
+    const datosGuardados = localStorage.getItem('datosUsuarioIMC');
+    if (datosGuardados) {
+        datosUsuarioIMC = JSON.parse(datosGuardados);
+    }
+    mostrarVista("imc");
+});
+
+/* ============================= */
+/* CALCULAR IMC → COLAB */
+/* ============================= */
+async function calcularIMCColab() {
+
+    const data = {
+        edad: parseInt(document.getElementById("edadVal").innerText),
+        peso: parseFloat(document.getElementById("pesoVal").innerText),
+        altura: parseFloat(document.getElementById("alturaVal").innerText),
+        actividad: document.querySelector(".activity-btn.active").innerText
+    };
+
+    try {
+        const res = await fetch(`${API_URL}/calcular-imc`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+            throw new Error(`Error del servidor: ${res.status} ${res.statusText}`);
+        }
+
+        const result = await res.json();
+
+        // Guardar datos del usuario
+        guardarDatosUsuario(result);
+
+        // 👉 RESULTADOS DESDE COLAB
+        document.getElementById("objetivoReco").innerText = result.objetivo;
+        document.getElementById("caloriasReco").innerText = result.calorias + " kcal";
+
+        // Comidas
+        document.getElementById("descDesayuno").innerText = result.desayuno.descripcion;
+        document.getElementById("calDes").innerText = result.desayuno.calorias + " Cal";
+        document.getElementById("protDes").innerText = result.desayuno.proteinas + "g Prot";
+
+        document.getElementById("descAlm").innerText = result.almuerzo.descripcion;
+        document.getElementById("calAlm").innerText = result.almuerzo.calorias + " Cal";
+        document.getElementById("protAlm").innerText = result.almuerzo.proteinas + "g Prot";
+
+        document.getElementById("descCena").innerText = result.cena.descripcion;
+        document.getElementById("calCena").innerText = result.cena.calorias + " Cal";
+        document.getElementById("protCena").innerText = result.cena.proteinas + "g Prot";
+
+        // Snacks
+        const snacksDiv = document.getElementById("snacksReco");
+        snacksDiv.innerHTML = "";
+        result.snacks.forEach(snack => {
+            snacksDiv.innerHTML += `<span>${snack}</span>`;
+        });
+
+        // Tips
+        const tipsDiv = document.getElementById("tipsReco");
+        tipsDiv.innerHTML = "";
+        result.tips.forEach(tip => {
+            tipsDiv.innerHTML += `<li>${tip}</li>`;
+        });
+
+        // 👉 CAMBIAR DE VISTA
+        mostrarVista("reco");
+
+    } catch (error) {
+        alert("Error al conectar con el servidor. Asegúrate de que el backend esté corriendo en http://localhost:5000");
+        console.error("Error:", error);
+    }
+}
+
+function mostrarVista(vista) {
+    // Oculta todas las vistas
+    document.querySelectorAll("section[id^='vista-']")
+        .forEach(v => v.classList.add("hidden"));
+
+    // Muestra la vista seleccionada
+    document.getElementById("vista-" + vista).classList.remove("hidden");
+
+    // Quita clase active de todos los botones
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+
+    // Añade clase active al botón correspondiente
+    document.querySelector(`.nav-btn[onclick="mostrarVista('${vista}')"]`).classList.add("active");
+}
+
+
+/* ============================= */
+/* ANÁLISIS DE IMÁGENES */
+/* ============================= */
+
+function previewImagen(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validar tipo
+    if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecciona una imagen válida');
+        return;
+    }
+
+    // Validar tamaño (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        alert('La imagen es muy grande. Máximo 10MB');
+        return;
+    }
+
+    imagenActual = file;
+
+    // Mostrar vista previa
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        document.getElementById('previewImg').src = e.target.result;
+        document.getElementById('uploadArea').classList.add('hidden');
+        document.getElementById('imagePreview').classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+function removerImagen() {
+    imagenActual = null;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('uploadArea').classList.remove('hidden');
+    document.getElementById('imagePreview').classList.add('hidden');
+    document.getElementById('analysisResults').classList.add('hidden');
+    document.getElementById('loadingState').classList.add('hidden');
+}
+
+function analizarOtra() {
+    removerImagen();
+}
+
+async function analizarImagen() {
+    if (!imagenActual) {
+        alert('Por favor, selecciona una imagen primero');
+        return;
+    }
+
+    // Obtener datos del usuario (desde localStorage o usar valores por defecto)
+    let datosUsuario = {
+        imc: 22.5,
+        categoria_imc: 'Normal',
+        calorias_objetivo: 2000,
+        objetivo: 'mantener peso'
+    };
+
+    if (datosUsuarioIMC) {
+        datosUsuario = {
+            imc: datosUsuarioIMC.imc,
+            categoria_imc: datosUsuarioIMC.categoria,
+            calorias_objetivo: datosUsuarioIMC.calorias,
+            objetivo: datosUsuarioIMC.objetivo.toLowerCase().includes('mantener') ? 'mantener peso' :
+                     datosUsuarioIMC.objetivo.toLowerCase().includes('perder') ? 'perder peso' :
+                     datosUsuarioIMC.objetivo.toLowerCase().includes('ganar') ? 'ganar peso' : 'mantener peso'
+        };
+    } else {
+        // Si no hay datos, usar valores por defecto automáticamente (más user-friendly)
+        console.log('No hay datos de IMC guardados. Usando valores por defecto.');
+        // Los valores por defecto ya están definidos arriba
+        // Solo mostramos un mensaje informativo en consola, no interrumpimos el flujo
+    }
+
+    // Mostrar estado de carga
+    document.getElementById('loadingState').classList.remove('hidden');
+    document.getElementById('analysisResults').classList.add('hidden');
+    document.getElementById('btnAnalizar').disabled = true;
+
+    try {
+        // Preparar FormData
+        const formData = new FormData();
+        formData.append('imagen', imagenActual);
+        formData.append('imc', datosUsuario.imc);
+        formData.append('categoria_imc', datosUsuario.categoria_imc);
+        formData.append('calorias_objetivo', datosUsuario.calorias_objetivo);
+        formData.append('objetivo', datosUsuario.objetivo);
+
+        // Enviar al backend
+        const response = await fetch(`${API_URL}/analizar-imagen`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.error || 'Error al analizar la imagen');
+        }
+
+        // Mostrar resultados
+        mostrarResultados(result);
+
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('btnAnalizar').disabled = false;
+        
+        let mensajeError = 'Error al analizar la imagen.\n\n';
+        
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            mensajeError += '⚠️ El backend no está corriendo.\n\n';
+            mensajeError += 'Para solucionarlo:\n';
+            mensajeError += '1. Abre una terminal\n';
+            mensajeError += '2. Ejecuta: python backend/app.py\n';
+            mensajeError += '3. Espera a ver "Servidor corriendo"\n';
+            mensajeError += '4. Intenta analizar de nuevo';
+        } else {
+            mensajeError += `Detalle: ${error.message}`;
+        }
+        
+        alert(mensajeError);
+    }
+}
+
+function mostrarResultados(result) {
+    const analisis = result.analisis;
+    const recomendacion = result.recomendacion;
+
+    // Ocultar carga, mostrar resultados
+    document.getElementById('loadingState').classList.add('hidden');
+    document.getElementById('analysisResults').classList.remove('hidden');
+    document.getElementById('btnAnalizar').disabled = false;
+
+    // Actualizar estado (porción correcta/exceso)
+    const resultStatus = document.getElementById('resultStatus');
+    const statusIcon = document.getElementById('statusIcon');
+    const resultTitle = document.getElementById('resultTitle');
+    const confidenceText = document.getElementById('confidenceText');
+
+    if (analisis.porcion_correcta) {
+        statusIcon.textContent = '✅';
+        resultTitle.textContent = 'Porción Correcta';
+        resultStatus.className = 'result-status correct';
+    } else {
+        statusIcon.textContent = '⚠️';
+        resultTitle.textContent = 'Exceso de Porción';
+        resultStatus.className = 'result-status excess';
+    }
+
+    confidenceText.textContent = `Confianza: ${(analisis.confianza * 100).toFixed(1)}%`;
+
+    // Detalles
+    document.getElementById('caloriasEst').textContent = `${recomendacion.calorias_estimadas} kcal`;
+    document.getElementById('pesoEst').textContent = `${recomendacion.gramos_estimados} g`;
+
+    // Recomendación
+    document.getElementById('recommendationText').textContent = recomendacion.mensaje;
+}
+
+// Función para analizar desde el chat de NutriBot
+async function analizarImagenDesdeChat(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Cambiar a vista de análisis
+    mostrarVista('analizar');
+
+    // Simular el evento para previewImagen
+    const fakeEvent = {
+        target: {
+            files: [file]
+        }
+    };
+    previewImagen(fakeEvent);
+
+    // Analizar automáticamente después de un momento
+    setTimeout(() => {
+        analizarImagen();
+    }, 500);
+}
+
+/* ============================= */
+/* FUNCIONES DEL CHATBOT */
+/* ============================= */
+
+function enviarMensaje() {
+    const input = document.getElementById('userMessage');
+    const mensaje = input.value.trim();
+    
+    if (!mensaje) return;
+    
+    // Agregar mensaje del usuario al chat
+    agregarMensajeUsuario(mensaje);
+    
+    // Limpiar input
+    input.value = '';
+    
+    // Responder (simulando respuesta del bot)
+    setTimeout(() => {
+        responderMensaje(mensaje);
+    }, 500);
+}
+
+function agregarMensajeUsuario(texto) {
+    const chatMessages = document.getElementById('chat-messages');
+    const mensajeDiv = document.createElement('div');
+    mensajeDiv.className = 'message user';
+    mensajeDiv.textContent = texto;
+    chatMessages.appendChild(mensajeDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function agregarMensajeBot(texto) {
+    const chatMessages = document.getElementById('chat-messages');
+    const mensajeDiv = document.createElement('div');
+    mensajeDiv.className = 'message bot';
+    mensajeDiv.textContent = texto;
+    chatMessages.appendChild(mensajeDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function responderMensaje(mensaje) {
+    const mensajeLower = mensaje.toLowerCase();
+    
+    // Respuestas basadas en palabras clave
+    let respuesta = '';
+    
+    if (mensajeLower.includes('proteína') || mensajeLower.includes('proteina')) {
+        respuesta = 'La cantidad de proteína recomendada depende de varios factores:\n\n' +
+                   '• Sedentarios: 0.8g por kg de peso\n' +
+                   '• Activos: 1.2-1.7g por kg de peso\n' +
+                   '• Atletas: 1.8-2.2g por kg de peso\n\n' +
+                   'Por ejemplo, si pesas 70kg y eres activo, necesitas entre 84-119g de proteína al día.';
+    } else if (mensajeLower.includes('adelgazar') || mensajeLower.includes('bajar peso') || mensajeLower.includes('perder peso')) {
+        respuesta = 'Para adelgazar de forma saludable:\n\n' +
+                   '• Crea un déficit calórico moderado (300-500 kcal/día)\n' +
+                   '• Prioriza proteínas y vegetales\n' +
+                   '• Bebe mucha agua (2-2.5L/día)\n' +
+                   '• Realiza ejercicio regular\n' +
+                   '• Duerme 7-8 horas\n' +
+                   '• Ten paciencia, el proceso toma tiempo';
+    } else if (mensajeLower.includes('snack') || mensajeLower.includes('tentempié')) {
+        respuesta = 'Mejores snacks saludables:\n\n' +
+                   '• Frutas frescas (manzana, plátano, frutos rojos)\n' +
+                   '• Frutos secos (almendras, nueces) - máximo 30g\n' +
+                   '• Yogurt griego sin azúcar\n' +
+                   '• Hummus con vegetales\n' +
+                   '• Batido de proteína\n' +
+                   '• Huevo duro';
+    } else if (mensajeLower.includes('agua') || mensajeLower.includes('hidratación') || mensajeLower.includes('hidratacion')) {
+        respuesta = 'Recomendaciones de hidratación:\n\n' +
+                   '• Bebe 2-2.5 litros de agua al día\n' +
+                   '• Más si haces ejercicio o hace calor\n' +
+                   '• El agua es la mejor opción\n' +
+                   '• Evita bebidas azucaradas\n' +
+                   '• Los alimentos con mucha agua (frutas, verduras) también ayudan';
+    } else if (mensajeLower.includes('entreno') || mensajeLower.includes('ejercicio') || mensajeLower.includes('pre-entreno')) {
+        respuesta = 'Nutrición pre-entreno:\n\n' +
+                   '• Come 1-2 horas antes del ejercicio\n' +
+                   '• Carbohidratos complejos (avena, plátano)\n' +
+                   '• Proteína ligera si es necesario\n' +
+                   '• Hidrátate bien\n' +
+                   '• Evita comidas pesadas o grasosas\n\n' +
+                   'Ejemplo: avena con plátano 1 hora antes';
+    } else if (mensajeLower.includes('desayuno')) {
+        respuesta = 'Ideas de desayunos saludables:\n\n' +
+                   '• Avena con frutas y nueces\n' +
+                   '• Yogurt griego con granola y frutas\n' +
+                   '• Huevos revueltos con espinacas y tostada integral\n' +
+                   '• Smoothie con proteína\n' +
+                   '• Tostadas integrales con aguacate y huevo\n\n' +
+                   'Incluye proteína, carbohidratos complejos y algo de grasa saludable.';
+    } else if (mensajeLower.includes('calorías') || mensajeLower.includes('calorias') || mensajeLower.includes('caloría')) {
+        respuesta = 'Las calorías son la energía que nuestro cuerpo necesita:\n\n' +
+                   '📊 **Cálculo básico**:\n' +
+                   '• Mujeres: 1800-2200 kcal/día (sedentarias)\n' +
+                   '• Hombres: 2200-2600 kcal/día (sedentarios)\n' +
+                   '• Aumenta con actividad física\n\n' +
+                   '🎯 **Distribución recomendada**:\n' +
+                   '• 45-65% Carbohidratos\n' +
+                   '• 10-35% Proteínas\n' +
+                   '• 20-35% Grasas\n\n' +
+                   '💡 Calcula tu IMC primero para obtener tu necesidad calórica personalizada.';
+    } else if (mensajeLower.includes('dieta') || mensajeLower.includes('plan alimenticio')) {
+        respuesta = 'Un buen plan alimenticio incluye:\n\n' +
+                   '☀️ **Desayuno** (25% del día):\n' +
+                   '• Proteína + Carbohidratos complejos\n' +
+                   '• Ejemplo: Avena con frutas y yogur\n\n' +
+                   '🍽️ **Almuerzo** (35% del día):\n' +
+                   '• Proteína + Vegetales + Carbohidratos\n' +
+                   '• Ejemplo: Pollo + Ensalada + Arroz integral\n\n' +
+                   '🌙 **Cena** (25% del día):\n' +
+                   '• Proteína ligera + Vegetales\n' +
+                   '• Ejemplo: Pescado + Verduras al vapor\n\n' +
+                   '🍏 **Snacks** (15% restante):\n' +
+                   '• Frutas, frutos secos, yogur\n\n' +
+                   '📊 Calcula tu IMC para recibir un plan personalizado basado en tus necesidades.';
+    } else {
+        respuesta = 'Gracias por tu pregunta. Puedo ayudarte con:\n\n' +
+                   '💡 **Consejos de nutrición** - Pregúntame sobre alimentación saludable\n' +
+                   '📷 **Análisis de imágenes** - Usa el botón 📷 para analizar tu comida\n' +
+                   '📊 **Cálculo de IMC** - Ve a "Calculadora IMC" para un plan personalizado\n' +
+                   '❓ **Preguntas frecuentes** - Usa los botones de abajo\n\n' +
+                   '¿Hay algo específico sobre nutrición que te gustaría saber?';
+    }
+    
+    agregarMensajeBot(respuesta);
+}
+
+function hacerPregunta(pregunta) {
+    const input = document.getElementById('userMessage');
+    input.value = pregunta;
+    enviarMensaje();
+}
+
+/* ============================= */
+/* DRAG & DROP */
+/* ============================= */
+
+function handleDragOver(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('uploadArea').classList.add('drag-over');
+}
+
+function handleDragLeave(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('uploadArea').classList.remove('drag-over');
+}
+
+function handleDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById('uploadArea').classList.remove('drag-over');
+    
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith('image/')) {
+            imagenActual = file;
+            
+            // Mostrar vista previa
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('previewImg').src = e.target.result;
+                document.getElementById('uploadArea').classList.add('hidden');
+                document.getElementById('imagePreview').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Por favor, arrastra solo imágenes');
+        }
+    }
+}
+
+</script>
+
+
+</body>
+</html>

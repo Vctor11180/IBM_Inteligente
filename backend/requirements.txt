@@ -1,0 +1,10 @@
+# Dependencias del Backend Flask
+flask>=2.2.0
+flask-cors>=3.0.10
+
+# IA/ML (ya instaladas en el proyecto general)
+# tensorflow>=2.10.0
+# numpy>=1.23.0
+# opencv-python>=4.6.0
+# Pillow>=9.0.0
+
