@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>NutriLife</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Ethers.js para interactuar con blockchain -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
 <body>
 
@@ -18,7 +20,19 @@
         <button class="nav-btn" onclick="mostrarVista('reco')">Recomendaciones</button>
         <button class="nav-btn" onclick="mostrarVista('analizar')">📷 Analizar Comida</button>
         <button class="nav-btn" onclick="mostrarVista('bot')">NutriBot</button>
+        <button class="nav-btn" onclick="mostrarVista('historial')">📜 Historial</button>
     </nav>
+
+    <!-- Indicador de Wallet -->
+    <div class="wallet-status" id="walletStatus">
+        <button class="wallet-btn" id="walletBtn" onclick="toggleWallet()">
+            🔗 Conectar Wallet
+        </button>
+        <div class="wallet-info hidden" id="walletInfo">
+            <span class="wallet-address" id="walletAddress"></span>
+            <button class="disconnect-btn" onclick="desconectarWallet()">Desconectar</button>
+        </div>
+    </div>
 </header>
 
 <main>
@@ -374,6 +388,11 @@ function mostrarVista(vista) {
 
     // Añade clase active al botón correspondiente
     document.querySelector(`.nav-btn[onclick="mostrarVista('${vista}')"]`).classList.add("active");
+    
+    // Si es la vista de historial, cargar datos
+    if (vista === 'historial') {
+        cargarHistorial();
+    }
 }
 
 
@@ -522,17 +541,75 @@ function mostrarResultados(result) {
     const resultTitle = document.getElementById('resultTitle');
     const confidenceText = document.getElementById('confidenceText');
 
-    if (analisis.porcion_correcta) {
+    // Clasificación mejorada considerando probabilidades
+    const probExceso = analisis.probabilidad_exceso;
+    const confianza = analisis.confianza;
+    
+    // Si la probabilidad de exceso es > 0.35, mostrar como exceso (más estricto)
+    // Esto ayuda a detectar mejor los platos rebalsados
+    if (analisis.porcion_correcta && probExceso < 0.35) {
         statusIcon.textContent = '✅';
         resultTitle.textContent = 'Porción Correcta';
         resultStatus.className = 'result-status correct';
-    } else {
+    } else if (!analisis.porcion_correcta || probExceso >= 0.35) {
         statusIcon.textContent = '⚠️';
         resultTitle.textContent = 'Exceso de Porción';
         resultStatus.className = 'result-status excess';
+        
+        // Si la probabilidad está entre 0.35 y 0.5, mostrar como posible exceso
+        if (probExceso >= 0.35 && probExceso < 0.5) {
+            resultTitle.textContent = 'Posible Exceso de Porción';
+        }
     }
 
-    confidenceText.textContent = `Confianza: ${(analisis.confianza * 100).toFixed(1)}%`;
+    // Mostrar confianza con color según el nivel
+    const nivelConfianza = analisis.nivel_confianza || 'media';
+    let confianzaColor = '#6b7280'; // gris por defecto
+    if (nivelConfianza === 'alta') confianzaColor = '#22c55e'; // verde
+    else if (nivelConfianza === 'media') confianzaColor = '#f59e0b'; // amarillo
+    else confianzaColor = '#ef4444'; // rojo
+    
+    confidenceText.textContent = `Confianza: ${(confianza * 100).toFixed(1)}%`;
+    confidenceText.style.color = confianzaColor;
+    
+    // Mostrar advertencia si la confianza es baja
+    if (analisis.advertencia) {
+        const advertenciaDiv = document.createElement('div');
+        advertenciaDiv.className = 'advertencia-baja-confianza';
+        advertenciaDiv.innerHTML = `⚠️ ${analisis.advertencia}`;
+        advertenciaDiv.style.cssText = 'background: #fef3c7; color: #92400e; padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 14px;';
+        resultStatus.appendChild(advertenciaDiv);
+    }
+    
+    // Mostrar información de IPFS si está disponible
+    if (result.ipfs && result.ipfs.cid) {
+        const ipfsSection = document.createElement('div');
+        ipfsSection.className = 'ipfs-info';
+        ipfsSection.style.cssText = 'background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 16px; margin-top: 16px;';
+        
+        ipfsSection.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="font-size: 20px;">🌐</span>
+                <h4 style="margin: 0; color: #0c4a6e; font-size: 16px;">Almacenado en IPFS</h4>
+            </div>
+            <div style="font-size: 13px; color: #075985; margin-bottom: 8px;">
+                <strong>CID:</strong> <code style="background: white; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 12px;">${result.ipfs.cid}</code>
+            </div>
+            <a href="${result.ipfs.url}" target="_blank" style="color: #0284c7; text-decoration: none; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
+                🔗 Ver imagen en IPFS →
+            </a>
+        `;
+        
+        resultStatus.appendChild(ipfsSection);
+        
+        // Mostrar sección de blockchain después de IPFS
+        document.getElementById('blockchainSection').style.display = 'block';
+    } else {
+        document.getElementById('blockchainSection').style.display = 'none';
+    }
+
+    // Guardar resultado para usar en blockchain
+    window.resultadoActual = result;
 
     // Detalles
     document.getElementById('caloriasEst').textContent = `${recomendacion.calorias_estimadas} kcal`;
@@ -741,6 +818,319 @@ function handleDrop(event) {
 
 </script>
 
+<!-- Cargar configuración del contrato -->
+<script src="js/contract-config.js"></script>
+
+<!-- Funciones de Blockchain -->
+<script>
+// =============================
+// BLOCKCHAIN / WEB3 FUNCTIONS
+// =============================
+
+let walletAddress = null;
+let provider = null;
+let signer = null;
+let contract = null;
+
+// Detectar Wallet (MetaMask, Core Wallet, etc.)
+function detectarWallet() {
+    if (typeof window.ethereum !== 'undefined') {
+        return true;
+    }
+    return false;
+}
+
+// Cambiar a red Sepolia automáticamente
+async function cambiarARedSepolia() {
+    try {
+        // Parámetros de Sepolia
+        const sepoliaParams = {
+            chainId: '0xaa36a7', // 11155111 en hexadecimal
+            chainName: 'Sepolia',
+            nativeCurrency: {
+                name: 'Ether',
+                symbol: 'ETH',
+                decimals: 18
+            },
+            rpcUrls: ['https://rpc.sepolia.org'],
+            blockExplorerUrls: ['https://sepolia.etherscan.io']
+        };
+
+        // Intentar agregar/cambiar a Sepolia
+        await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [sepoliaParams]
+        });
+
+        return true;
+    } catch (error) {
+        console.error('Error cambiando a Sepolia:', error);
+        
+        // Si el error es que el usuario rechazó, retornar false
+        if (error.code === 4001 || error.code === -32002) {
+            return false;
+        }
+        
+        // Si la cadena ya existe, intentar cambiar
+        try {
+            await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: '0xaa36a7' }]
+            });
+            return true;
+        } catch (switchError) {
+            console.error('Error cambiando a Sepolia:', switchError);
+            return false;
+        }
+    }
+}
+
+// Conectar Wallet
+async function conectarWallet() {
+    // Verificar que ethers esté disponible
+    if (typeof ethers === 'undefined') {
+        alert('Error: Ethers.js no está cargado. Por favor, recarga la página.');
+        console.error('Ethers.js no está disponible');
+        return false;
+    }
+
+    if (!detectarWallet()) {
+        alert('No se detectó una wallet. Por favor, instala MetaMask o Core Wallet');
+        return false;
+    }
+
+    try {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        
+        // Solicitar acceso a la cuenta
+        await provider.send("eth_requestAccounts", []);
+        
+        signer = provider.getSigner();
+        walletAddress = await signer.getAddress();
+
+        // Verificar que esté en la red correcta (Sepolia)
+        const network = await provider.getNetwork();
+        const expectedChainId = CONTRACT_CONFIG.NETWORK.chainId;
+        
+        if (network.chainId !== expectedChainId) {
+            // Intentar cambiar a Sepolia automáticamente
+            const cambioExitoso = await cambiarARedSepolia();
+            if (!cambioExitoso) {
+                alert(`Por favor cambia manualmente a la red ${CONTRACT_CONFIG.NETWORK.name.toUpperCase()} (Chain ID: ${expectedChainId})`);
+                return false;
+            }
+            // Después de cambiar, recargar provider
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+            walletAddress = await signer.getAddress();
+        }
+
+        // Actualizar UI
+        document.getElementById('walletBtn').classList.add('hidden');
+        document.getElementById('walletInfo').classList.remove('hidden');
+        document.getElementById('walletAddress').textContent = 
+            `${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`;
+
+        // Cargar ABI y inicializar contrato
+        const abi = await getABI();
+        contract = new ethers.Contract(CONTRACT_CONFIG.ADDRESS, abi, signer);
+
+        console.log('Wallet conectada:', walletAddress);
+        console.log('Contrato inicializado:', CONTRACT_CONFIG.ADDRESS);
+
+        return true;
+    } catch (error) {
+        console.error('Error conectando wallet:', error);
+        alert('Error al conectar wallet: ' + error.message);
+        return false;
+    }
+}
+
+// Desconectar Wallet
+function desconectarWallet() {
+    walletAddress = null;
+    provider = null;
+    signer = null;
+    contract = null;
+    
+    document.getElementById('walletBtn').classList.remove('hidden');
+    document.getElementById('walletInfo').classList.add('hidden');
+}
+
+// Toggle Wallet (conectar/desconectar)
+async function toggleWallet() {
+    if (walletAddress) {
+        desconectarWallet();
+    } else {
+        await conectarWallet();
+    }
+}
+
+// Guardar análisis en Blockchain
+async function guardarEnBlockchain() {
+    if (!walletAddress) {
+        const conectado = await conectarWallet();
+        if (!conectado) return;
+    }
+
+    if (!window.resultadoActual || !window.resultadoActual.ipfs) {
+        alert('No hay análisis disponible para guardar. Primero analiza una imagen.');
+        return;
+    }
+
+    try {
+        const resultado = window.resultadoActual;
+        const analisis = resultado.analisis;
+        const recomendacion = resultado.recomendacion;
+        const ipfs = resultado.ipfs;
+
+        // Mostrar estado de carga
+        const txStatus = document.getElementById('txStatus');
+        const btnGuardar = document.getElementById('btnGuardarBlockchain');
+        txStatus.classList.remove('hidden');
+        txStatus.innerHTML = '<p>⏳ Preparando transacción...</p>';
+        btnGuardar.disabled = true;
+
+        // Preparar datos
+        const cidIPFS = ipfs.cid;
+        const porcionCorrecta = analisis.porcion_correcta;
+        const confianza = Math.round(analisis.confianza * 100); // Convertir a 0-100
+        const calorias = recomendacion.calorias_estimadas;
+
+        console.log('Guardando análisis:', { cidIPFS, porcionCorrecta, confianza, calorias });
+
+        // Llamar al Smart Contract
+        const tx = await contract.guardarAnalisis(
+            cidIPFS,
+            porcionCorrecta,
+            confianza,
+            calorias
+        );
+
+        txStatus.innerHTML = '<p>⏳ Transacción enviada. Esperando confirmación...</p>';
+        
+        // Esperar confirmación
+        const receipt = await tx.wait();
+
+        // Obtener URL del explorador
+        const explorerUrl = getExplorerUrl(CONTRACT_CONFIG.NETWORK.name, receipt.transactionHash);
+
+        // Actualizar UI con éxito
+        txStatus.innerHTML = `
+            <p>✅ Guardado exitosamente en blockchain</p>
+            <a href="${explorerUrl}" target="_blank" id="txLink">Ver transacción en Etherscan →</a>
+        `;
+        btnGuardar.disabled = false;
+
+        console.log('Transacción confirmada:', receipt.transactionHash);
+        
+        // Mostrar mensaje de éxito
+        alert('✅ Análisis guardado exitosamente en blockchain!');
+
+    } catch (error) {
+        console.error('Error guardando en blockchain:', error);
+        const txStatus = document.getElementById('txStatus');
+        const btnGuardar = document.getElementById('btnGuardarBlockchain');
+        txStatus.innerHTML = `<p>❌ Error: ${error.message}</p>`;
+        btnGuardar.disabled = false;
+        
+        // Mensaje de error más amigable
+        if (error.message.includes('user rejected')) {
+            alert('Transacción cancelada por el usuario');
+        } else if (error.message.includes('insufficient funds')) {
+            alert('Fondos insuficientes. Necesitas ETH de prueba en Sepolia');
+        } else {
+            alert('Error al guardar en blockchain: ' + error.message);
+        }
+    }
+}
+
+// Obtener historial desde Blockchain
+async function cargarHistorial() {
+    if (!walletAddress) {
+        document.getElementById('historialVacio').classList.remove('hidden');
+        document.getElementById('historialList').innerHTML = '';
+        document.getElementById('historialLoading').classList.add('hidden');
+        return;
+    }
+
+    try {
+        document.getElementById('historialLoading').classList.remove('hidden');
+        document.getElementById('historialVacio').classList.add('hidden');
+        document.getElementById('historialList').innerHTML = '';
+        
+        // Obtener IDs de análisis del usuario
+        const analisisIds = await contract.obtenerAnalisisUsuario(walletAddress);
+        
+        console.log('Análisis encontrados:', analisisIds.length);
+
+        if (analisisIds.length === 0) {
+            document.getElementById('historialVacio').classList.remove('hidden');
+            document.getElementById('historialLoading').classList.add('hidden');
+            return;
+        }
+
+        // Obtener cada análisis
+        const historialList = document.getElementById('historialList');
+        const promesas = analisisIds.map(id => contract.obtenerAnalisis(id));
+        const analisisArray = await Promise.all(promesas);
+
+        // Renderizar historial (orden inverso: más reciente primero)
+        analisisArray.reverse().forEach((analisis, index) => {
+            const div = document.createElement('div');
+            div.className = 'historial-item';
+            
+            const fecha = new Date(analisis.timestamp.toNumber() * 1000);
+            const fechaStr = fecha.toLocaleDateString('es-ES', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            div.innerHTML = `
+                <div class="historial-header">
+                    <span>Análisis #${analisisArray.length - index}</span>
+                    <small>${fechaStr}</small>
+                </div>
+                <div class="historial-content">
+                    <p><strong>CID IPFS:</strong> <code>${analisis.cidIPFS}</code></p>
+                    <p><strong>Porción:</strong> ${analisis.porcionCorrecta ? '✅ Correcta' : '⚠️ Exceso'}</p>
+                    <p><strong>Confianza:</strong> ${analisis.confianza.toNumber()}%</p>
+                    <p><strong>Calorías:</strong> ${analisis.calorias.toNumber()} kcal</p>
+                    <a href="https://gateway.pinata.cloud/ipfs/${analisis.cidIPFS}" target="_blank" style="color: #0284c7; text-decoration: none;">
+                        🔗 Ver imagen en IPFS →
+                    </a>
+                </div>
+            `;
+            historialList.appendChild(div);
+        });
+
+        document.getElementById('historialLoading').classList.add('hidden');
+    } catch (error) {
+        console.error('Error cargando historial:', error);
+        document.getElementById('historialLoading').classList.add('hidden');
+        document.getElementById('historialVacio').classList.remove('hidden');
+        alert('Error al cargar historial: ' + error.message);
+    }
+}
+
+// Detectar cambios de cuenta en la wallet
+if (typeof window.ethereum !== 'undefined') {
+    window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts.length === 0) {
+            desconectarWallet();
+        } else {
+            conectarWallet();
+        }
+    });
+    
+    window.ethereum.on('chainChanged', () => {
+        window.location.reload();
+    });
+}
+</script>
 
 </body>
 </html>

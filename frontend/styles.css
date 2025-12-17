@@ -697,3 +697,196 @@ input[type=range] {
 .secondary-btn:hover {
     background: #e5e7eb;
 }
+
+/* ============================= */
+/* WALLET STATUS */
+/* ============================= */
+.wallet-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wallet-btn {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.wallet-btn:hover {
+    opacity: 0.9;
+}
+
+.wallet-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wallet-address {
+    background: #f3f4f6;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #374151;
+}
+
+.disconnect-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.disconnect-btn:hover {
+    background: #dc2626;
+}
+
+/* ============================= */
+/* BLOCKCHAIN SECTION */
+/* ============================= */
+.blockchain-section {
+    background: #f0f9ff;
+    border: 1px solid #0ea5e9;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.blockchain-info h4 {
+    margin: 0 0 8px 0;
+    color: #0c4a6e;
+    font-size: 18px;
+}
+
+.blockchain-info p {
+    margin: 0 0 16px 0;
+    color: #075985;
+    font-size: 14px;
+}
+
+.gas-info {
+    margin: 12px 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.tx-status {
+    margin-top: 12px;
+    padding: 12px;
+    background: #fef3c7;
+    border-radius: 8px;
+    color: #92400e;
+}
+
+.tx-status p {
+    margin: 0 0 8px 0;
+}
+
+.tx-status a {
+    color: #0284c7;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.tx-status a:hover {
+    text-decoration: underline;
+}
+
+/* ============================= */
+/* HISTORIAL */
+/* ============================= */
+.historial-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.historial-list {
+    display: grid;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.historial-item {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.historial-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.historial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.historial-header span {
+    font-weight: 600;
+    color: #111827;
+    font-size: 16px;
+}
+
+.historial-header small {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.historial-content {
+    color: #4b5563;
+}
+
+.historial-content p {
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.historial-content strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+.historial-content code {
+    background: #f3f4f6;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: monospace;
+    color: #1f2937;
+}
+
+.historial-content a {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+}
+
+.empty-state p {
+    margin: 8px 0;
+}

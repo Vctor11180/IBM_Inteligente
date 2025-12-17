@@ -5,15 +5,15 @@ echo ========================================
 echo.
 
 echo [1/2] Iniciando Backend...
-start "NutriLife Backend" cmd /k "python backend/app.py"
+start cmd /k "cd /d %~dp0 && python backend/app.py"
 
 echo.
-echo Esperando 3 segundos para que el backend inicie...
-timeout /t 3 /nobreak > nul
+echo Esperando 5 segundos para que el backend inicie...
+timeout /t 5 /nobreak > nul
 
 echo.
 echo [2/2] Iniciando Frontend...
-start "NutriLife Frontend" cmd /k "cd frontend && python -m http.server 8000"
+start cmd /k "cd /d %~dp0\frontend && python -m http.server 8000"
 
 echo.
 echo ========================================

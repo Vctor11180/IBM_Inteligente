@@ -73,7 +73,7 @@
 - Soporte para preguntas sobre nutrición
 - Capacidad de análisis de imágenes conversacional
 
-### 4. **Integración Web3** 🚧 (Por Implementar)
+### 4. **Integración Web3 - IPFS** 🚧 (Fase 4 - Pendiente)
 - **Almacenamiento Descentralizado (IPFS)**:
   - Guardar imágenes de análisis en IPFS
   - Crear hashes únicos para cada imagen analizada

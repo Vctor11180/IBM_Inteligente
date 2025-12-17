@@ -36,29 +36,40 @@ Ubicación: `documentacion/fase1/`
 
 ---
 
-### Fase 2: Backend API para IA 🚧
+### Fase 2: Backend API para IA ✅
 
 Ubicación: `documentacion/fase2/`
 
 - **FASE2_BACKEND_API.md**: Guía detallada de la Fase 2
+- **RESUMEN_FASE2.md**: Resumen de implementación
+- **TESTING_ENDPOINTS.md**: Guía de testing
+- **RESULTADOS_TESTING.md**: Resultados del testing
 
-**Estado**: 🚧 En progreso
+**Estado**: ✅ Completada
 
 ---
 
-### Fase 3: Integración Frontend-Backend ⏳
+### Fase 3: Integración Frontend-Backend ✅
 
 Ubicación: `documentacion/fase3/`
 
-**Estado**: ⏳ Pendiente
+- **FASE3_INTEGRACION.md**: Guía de integración
+- **RESUMEN_FASE3.md**: Resumen de implementación
+
+**Estado**: ✅ Completada
 
 ---
 
-### Fase 4: Integración Web3 - IPFS ⏳
+### Fase 4: Integración Web3 - IPFS ✅
 
 Ubicación: `documentacion/fase4/`
 
-**Estado**: ⏳ Pendiente
+- **FASE4_IPFS.md**: Guía completa de implementación IPFS
+- **RESUMEN_FASE4.md**: Resumen de implementación y resultados
+- **EXPLICACION_IPFS_PINATA.md**: Explicación detallada de IPFS y Pinata
+- **README.md**: Índice de documentación de la fase 4
+
+**Estado**: ✅ Completada y probada exitosamente
 
 ---
 
@@ -113,10 +124,10 @@ proyecto/
 ## 📈 Estado General del Proyecto
 
 - ✅ **Fase 1**: Completada - Modelo IA entrenado
-- 🚧 **Fase 2**: En progreso - Backend API
-- ⏳ **Fase 3**: Pendiente - Integración Frontend
-- ⏳ **Fase 4**: Pendiente - IPFS
-- ⏳ **Fase 5**: Pendiente - Blockchain
+- ✅ **Fase 2**: Completada - Backend API funcionando
+- ✅ **Fase 3**: Completada - Frontend integrado con backend
+- ✅ **Fase 4**: Completada - Integración IPFS (Web3) - Imágenes se suben a Pinata
+- ⏳ **Fase 5**: Pendiente - Integración Blockchain
 - ⏳ **Fase 6**: Pendiente - Funcionalidades avanzadas
 
 ---

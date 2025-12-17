@@ -121,15 +121,26 @@ class NutricionService:
         porcion_correcta = analisis['porcion_correcta']
         confianza = analisis['confianza']
         
-        # Estimar calorías (aproximado basado en la porción)
-        # Una porción "correcta" promedio tiene ~400-500 cal
-        # Un exceso tiene ~700-900 cal
+        # Estimar calorías (aproximado basado en la porción y confianza)
+        # Usamos la probabilidad de exceso para calcular valores más precisos
+        prob_exceso = analisis.get('probabilidad_exceso', 0.5)
+        
+        # Calorías base: porción correcta = 400-500 cal, exceso = 700-900 cal
+        # Interpolamos basado en la probabilidad
         if porcion_correcta:
-            calorias_estimadas = 450
-            gramos_estimados = 350
+            # Porción correcta, pero consideramos si hay dudas (prob_exceso > 0.3)
+            if prob_exceso > 0.3:
+                # Hay alguna probabilidad de exceso, calculamos intermedio
+                calorias_estimadas = int(450 + (prob_exceso * 200))  # Entre 450 y 650
+                gramos_estimados = int(350 + (prob_exceso * 100))    # Entre 350 y 450
+            else:
+                # Porción claramente correcta
+                calorias_estimadas = 450
+                gramos_estimados = 350
         else:
-            calorias_estimadas = 800
-            gramos_estimados = 600
+            # Exceso detectado, calculamos basado en la confianza del exceso
+            calorias_estimadas = int(700 + (prob_exceso * 200))  # Entre 700 y 900
+            gramos_estimados = int(550 + (prob_exceso * 150))    # Entre 550 y 700
         
         # Generar mensaje según el análisis y objetivo
         if porcion_correcta:

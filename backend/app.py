@@ -7,6 +7,10 @@ Inicia el servidor Flask con todos los endpoints configurados.
 from flask import Flask
 from flask_cors import CORS
 import os
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env
+load_dotenv()
 
 # Importar blueprints
 from routes.api import api_bp

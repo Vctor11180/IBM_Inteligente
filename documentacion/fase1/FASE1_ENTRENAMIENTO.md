@@ -16,6 +16,7 @@ Entrenar un modelo de clasificación de imágenes que pueda distinguir entre **p
 - [x] **Ejecutar preprocesamiento** ✅ (20 imágenes entrenamiento, 9 validación)
 - [x] **Entrenar el modelo** ✅ (modelo MobileNetV2 entrenado)
 - [x] **Validar modelo** ✅ (Accuracy: 55.56% - esperado con dataset pequeño)
+- [ ] **Mejorar modelo con más datos** - Ver `MEJORAR_MODELO_IA.md` para guía completa
 - [x] **Probar predicciones** ✅ (script funcionando correctamente)
 
 ## 📊 Datos Disponibles

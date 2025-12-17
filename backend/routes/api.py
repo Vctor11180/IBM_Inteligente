@@ -11,6 +11,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from services.modelo_service import ModeloService
 from services.nutricion_service import NutricionService
+from services.ipfs_service import ipfs_service
 
 api_bp = Blueprint('api', __name__)
 
@@ -187,20 +188,59 @@ def analizar_imagen():
             datos_usuario['objetivo']
         )
         
-        return jsonify({
+        # Subir imagen a IPFS
+        resultado_ipfs = None
+        try:
+            # Resetear el puntero del archivo para poder leerlo de nuevo
+            imagen_file.seek(0)
+            
+            # Subir a IPFS
+            resultado_ipfs = ipfs_service.subir_archivo(
+                imagen_file,
+                nombre_archivo=imagen_file.filename or 'imagen_analizada.jpg'
+            )
+            
+            if resultado_ipfs:
+                print(f"✅ Imagen subida a IPFS con CID: {resultado_ipfs['cid']}")
+            else:
+                print("⚠️ No se pudo subir la imagen a IPFS, pero el análisis continúa")
+        except Exception as e:
+            print(f"⚠️ Error al subir a IPFS (continuando sin IPFS): {str(e)}")
+            # Continuamos sin IPFS si hay error
+        
+        # Determinar advertencia si la confianza es baja
+        confianza = resultado_analisis['confianza']
+        advertencia = None
+        if confianza < 0.6:
+            advertencia = "La confianza del análisis es baja. Considera que el resultado puede no ser preciso."
+        
+        # Construir respuesta
+        respuesta = {
             "success": True,
             "analisis": {
                 "porcion_correcta": resultado_analisis['porcion_correcta'],
-                "confianza": round(resultado_analisis['confianza'], 4),
+                "confianza": round(confianza, 4),
                 "probabilidad_correcta": round(resultado_analisis['probabilidad_correcta'], 4),
-                "probabilidad_exceso": round(resultado_analisis['probabilidad_exceso'], 4)
+                "probabilidad_exceso": round(resultado_analisis['probabilidad_exceso'], 4),
+                "advertencia": advertencia,
+                "nivel_confianza": "alta" if confianza >= 0.7 else "media" if confianza >= 0.6 else "baja"
             },
             "recomendacion": recomendaciones,
             "detalles": {
                 "tipo_alimento": "Comida analizada",
                 "gramos_estimados": recomendaciones.get('gramos_estimados', 0)
             }
-        }), 200
+        }
+        
+        # Agregar datos de IPFS si se subió correctamente
+        if resultado_ipfs:
+            respuesta["ipfs"] = {
+                "cid": resultado_ipfs['cid'],
+                "url": resultado_ipfs['url'],
+                "timestamp": resultado_ipfs.get('timestamp', '')
+            }
+        
+        return jsonify(respuesta), 200
         
     except Exception as e:
         import traceback

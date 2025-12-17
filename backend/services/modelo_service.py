@@ -130,8 +130,11 @@ class ModeloService:
             prob_exceso = float(prediccion[0][0])
             prob_correcta = 1.0 - prob_exceso
             
-            # Clase predicha (0: correcta, 1: exceso)
-            porcion_correcta = prob_exceso < 0.5
+            # Clase predicha con threshold ajustado (0: correcta, 1: exceso)
+            # Threshold más estricto (0.4 en lugar de 0.5) para reducir falsos negativos
+            # Si la probabilidad de exceso es >= 0.4, consideramos que hay exceso
+            threshold_exceso = 0.4  # Más sensible a detectar excesos
+            porcion_correcta = prob_exceso < threshold_exceso
             
             # Confianza (probabilidad de la clase predicha)
             confianza = prob_correcta if porcion_correcta else prob_exceso

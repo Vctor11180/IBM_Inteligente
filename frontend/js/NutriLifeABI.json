@@ -1,0 +1,359 @@
+[
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "idAnalisis",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "cidIPFS",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "porcionCorrecta",
+				"type": "bool"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "confianza",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "calorias",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "AnalisisGuardado",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "analisisPorId",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "cidIPFS",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "porcionCorrecta",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "confianza",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "calorias",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "idAnalisis",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "analisisPorUsuario",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			}
+		],
+		"name": "contarAnalisisUsuario",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "estadisticasUsuario",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "totalAnalisis",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "porcionesCorrectas",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "excesos",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "caloriasTotales",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "caloriasPromedio",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "confianzaPromedio",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "cidIPFS",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "porcionCorrecta",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "confianza",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "calorias",
+				"type": "uint256"
+			}
+		],
+		"name": "guardarAnalisis",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "idAnalisis",
+				"type": "uint256"
+			}
+		],
+		"name": "obtenerAnalisis",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "cidIPFS",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "porcionCorrecta",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "confianza",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "calorias",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			}
+		],
+		"name": "obtenerAnalisisUsuario",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "usuario",
+				"type": "address"
+			}
+		],
+		"name": "obtenerEstadisticasUsuario",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "totalAnalisis",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "porcionesCorrectas",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "excesos",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "caloriasTotales",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "caloriasPromedio",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "confianzaPromedio",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "obtenerTotalAnalisis",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

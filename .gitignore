@@ -4,46 +4,57 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
 venv/
+.venv/
+env/
 ENV/
-.venv
 
-# Modelos entrenados
-modelos/*.h5
-modelos/*.pb
-modelos/*.savedmodel
-modelos/modelo_porciones/
-
-# Datos preprocesados
-datos_preprocesados/*.npy
-
-# Jupyter Notebooks
-.ipynb_checkpoints
-*.ipynb
+# Node / Hardhat
+node_modules/
+.env
+.cache/
+artifacts/
+cache/
+coverage/
+coverage.json
+typechain-types/
 
 # IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Documentación generada (imágenes)
-documentacion/*.png
-documentacion/*.jpg
 
 # Logs
 *.log
 
-# Variables de entorno
+# Modelos grandes (opcional)
+# modelos/*.keras
+
+# Uploads temporales
+uploads/*
+!uploads/.gitkeep
+
+# Archivos de entorno - IMPORTANTE: NUNCA subir claves
 .env
 .env.local
+.env.*.local
+*.env
 
-# Node modules (si se añade frontend build)
-node_modules/
+# Claves privadas y secretos
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+.secrets
 
+# Hardhat
+cache
+artifacts
+
+# Archivos temporales
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
